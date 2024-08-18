@@ -3,7 +3,7 @@ from ..config.config import commands
 from api_telegramm_bot.core import bot
 
 
-@bot.message_handler(commands=['help'])
+@bot.message_handler(commands=['help', 'start'])
 def command_help(m: Message):
     cid = m.chat.id
     help_text = "Доступны следующие команды: \n"

@@ -45,6 +45,7 @@ class ApiClientKpInterface:
                         f'sortType={sort_param}&'
                         f'rating.kp={str(rating_min)}-{str(rating_max)}&'
                         f'genres.name={genre}')
+        print(sort_param)
         url = f"{self.BASE_URL}v1.4/movie?{query_params}"
         response = self.session.get(url=url, headers=self.HEADERS, timeout=self.TIMEOUT)
         if response.status_code == 200:

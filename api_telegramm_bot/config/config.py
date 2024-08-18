@@ -11,3 +11,4 @@ commands = {
     "history": "вывод истории запросов пользователей"
 }
 
+MAX_VIEW_FILMS = 20
