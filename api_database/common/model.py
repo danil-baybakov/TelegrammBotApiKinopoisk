@@ -25,8 +25,17 @@ class ParamsStorage(BaseModel):
     timestamp = DateTimeField(default=datetime.datetime.now())
 
 
+class History(BaseModel):
+    cid = IntegerField(null=True)
+    command = CharField(max_length=30, null=True)
+    genre = CharField(max_length=100, null=True)
+    limit = IntegerField(null=True)
+    order = IntegerField(null=True)
+    min_rating = FloatField(null=True)
+    max_rating = FloatField(null=True)
+    timestamp = DateTimeField(default=datetime.datetime.now())
+
+
 def create_tables():
     with db:
-        db.create_tables([ParamsStorage])
-
-
+        db.create_tables([ParamsStorage, History])
