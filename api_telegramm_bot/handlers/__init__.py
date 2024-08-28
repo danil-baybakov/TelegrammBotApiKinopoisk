@@ -1,15 +1,9 @@
-from . import default_handlers
 from . import help
-from . import low
-from . import high
-from . import custom
+from . import search
 from . import history
 
 __all__ = [
-    'default_handlers',
     'help',
-    'low',
-    'high',
-    'custom',
+    'search',
     'history'
 ]
