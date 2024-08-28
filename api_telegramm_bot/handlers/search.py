@@ -30,7 +30,7 @@ def get_genres_callback(callback: CallbackQuery) -> None:
     cmd = api_db.get_param_storage_by_cid(model=ParamsStorage, cid=cid).command
     genre = callback.data[6:]
     api_db.set_param_storage_by_cid(model=ParamsStorage, cid=cid, genre=genre)
-    msg = bot.send_message(callback.message.chat.id, f"Введите кол-во фильмов для поиска (0-{MAX_VIEW_FILMS}):")
+    msg = bot.send_message(callback.message.chat.id, f"Введите кол-во фильмов для поиска (1-{MAX_VIEW_FILMS}):")
     bot.register_next_step_handler(msg, set_min_rating if cmd == "/custom" else output_films)
 
 
@@ -38,8 +38,8 @@ def set_min_rating(message):
     cid = message.chat.id
     msg_text = message.text
     limit = is_number(msg_text)
-    if limit is None or limit < 0 or limit > MAX_VIEW_FILMS:
-        msg = bot.send_message(cid, f"Неверный ввод - должно быть число от 0 до {MAX_VIEW_FILMS}. "
+    if limit is None or limit < 1 or limit > MAX_VIEW_FILMS:
+        msg = bot.send_message(cid, f"Неверный ввод - должно быть число от 1 до {MAX_VIEW_FILMS}. "
                                     f"Введите значение заново:")
         bot.register_next_step_handler(msg, set_min_rating)
     else:
@@ -82,8 +82,8 @@ def output_films(message):
         api_db.set_param_storage_by_cid(model=ParamsStorage, cid=cid, max_rating=max_rating)
     else:
         limit = is_number(msg_text)
-        if limit is None or limit < 0 or limit > MAX_VIEW_FILMS:
-            msg = bot.send_message(cid, f"Неверный ввод - должно быть число от 0 до {MAX_VIEW_FILMS}. "
+        if limit is None or limit < 1 or limit > MAX_VIEW_FILMS:
+            msg = bot.send_message(cid, f"Неверный ввод - должно быть число от 1 до {MAX_VIEW_FILMS}. "
                                         f"Введите значение заново:")
             bot.register_next_step_handler(msg, output_films)
             return
@@ -98,8 +98,11 @@ def output_films(message):
         rating_min=params.min_rating,
         rating_max=params.max_rating
     )
-    for film in films:
-        bot.send_photo(cid, photo=film[0], caption=film[1])
+    if films:
+        for film in films:
+            bot.send_photo(cid, photo=film[0], caption=film[1])
+    else:
+        bot.send_message(cid, "Фильмов по данному запросу не найдено... ")
     api_db.set_param_storage_by_cid(
         model=History,
         cid=params.cid,
