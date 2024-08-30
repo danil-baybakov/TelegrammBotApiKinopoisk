@@ -36,6 +36,6 @@ class History(BaseModel):
     timestamp = DateTimeField(default=datetime.datetime.now())
 
 
-def create_tables():
+def create_tables() -> None:
     with db:
         db.create_tables([ParamsStorage, History])
