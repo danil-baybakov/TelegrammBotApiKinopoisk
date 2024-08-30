@@ -7,20 +7,38 @@ A = TypeVar("A", ParamsStorage, History)
 
 
 class InterfaceApiDatabase:
+    """
+    Базовый класс - интерфейс взаимодействия с БД sqlite
 
+    Args:
+    Attributes:
+    """
     @classmethod
-    def get_param_storage_by_cid(cls, model: A, cid: int) -> Optional[A]:
+    def get_param_storage_by_cid(cls, cid: int) -> Optional[ParamsStorage]:
+        """
+        Метод получения по идентификатору пользователя данных текущего запроса в чат
+
+        :param cid: идентификатор пользователя чата
+        :return: объект с текущими параметрами запроса в чат
+        """
         try:
             with db.atomic():
-                return model.get(model.cid == cid)
+                return ParamsStorage.get(ParamsStorage.cid == cid)
         except Exception:
             pass
 
     @classmethod
-    def get_history(cls, model: A, cid: int | None = None, limit: int = 10) -> list[A]:
+    def get_history(cls, cid: int | None = None, limit: int = 10) -> list[History]:
+        """
+        Метод получения по идентификатору пользователя его истории запросов в чат
+
+        :param cid: идентификатор пользователя чата
+        :param limit: ограничение на кол-во получаемых данных, по умолчанию 10
+        :return: список объектов истории запросов в чат
+        """
         with db.atomic():
-            where = model.cid == cid if cid is not None else True
-            result = model.select().where(where).limit(limit).order_by(model.timestamp.desc())
+            where = History.cid == cid if cid is not None else True
+            result = History.select().where(where).limit(limit).order_by(History.timestamp.desc())
         return [item for item in result]
 
     @classmethod
@@ -35,14 +53,28 @@ class InterfaceApiDatabase:
                                  max_rating: float | None = None,
                                  timestamp: datetime | None = None
                                  ) -> Optional[bool]:
+        """
+        Метод сохранения в БД данных запроса пользователя в чат
+
+        :param model: модель БД
+        :param cid: идентификатор пользователя
+        :param command: команда
+        :param genre: жанр фильма
+        :param limit: кол-во
+        :param order: метод сортировки: 1 - по возрастанию, -1 - по убыванию
+        :param min_rating: минимальный рейтинг
+        :param max_rating: максимальный рейтинг
+        :param timestamp: отметка времени записи в БД
+        :return:
+        """
         with (db.atomic()):
             try:
                 if model == ParamsStorage:
-                    params = cls.get_param_storage_by_cid(model=model, cid=cid)
+                    params = cls.get_param_storage_by_cid(cid=cid)
                     if params is None:
                         with db.atomic():
                             model.insert(cid=cid).execute()
-                            params = cls.get_param_storage_by_cid(model=model, cid=cid)
+                            params = cls.get_param_storage_by_cid(cid=cid)
                     if command is not None:
                         params.command = command
                     if genre is not None:
@@ -79,9 +111,15 @@ class InterfaceApiDatabase:
                 return
 
     @classmethod
-    def delete_param_storage_by_cid(cls, model: A, cid: int) -> Optional[bool]:
+    def delete_param_storage_by_cid(cls, cid: int) -> Optional[bool]:
+        """
+        Метод удаления записи с данными текущего запроса в чат по id пользователя
+
+        :param cid: идентификатор пользователя
+        :return: при успешной операции возвращает True, иначе False
+        """
         with db.atomic():
-            params = cls.get_param_storage_by_cid(model=model, cid=cid)
+            params = cls.get_param_storage_by_cid(cid=cid)
             if params is None:
                 return
             params.delete_instance()
