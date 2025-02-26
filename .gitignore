@@ -139,5 +139,5 @@ dmypy.json
 prettifier.py
 
 *.db
-*.xml
+misc.xml
 *.iml
