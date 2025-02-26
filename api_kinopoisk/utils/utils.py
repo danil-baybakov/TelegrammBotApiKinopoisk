@@ -34,7 +34,7 @@ class ApiClientKpInterface:
         "accept": "application/json",
         "X-API-KEY": settings.site_api_key.get_secret_value()
     }
-    TIMEOUT = 60
+    TIMEOUT = 100
 
     def __init__(self) -> None:
         self.session = requests.Session()
@@ -83,7 +83,7 @@ class ApiClientKpInterface:
                         f'sortType={sort_param}&'
                         f'rating.kp={str(rating_min)}-{str(rating_max)}&'
                         f'genres.name={genre}')
-        url = f"{self.BASE_URL}v1.4/movie?{query_params}"
+        url = f"{self.BASE_URL}/v1.4/movie?{query_params}"
         response = self.session.get(url=url, headers=self.HEADERS, timeout=self.TIMEOUT)
         if response.status_code == 200:
             return response.json()
