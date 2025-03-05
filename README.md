@@ -12,7 +12,7 @@
 2. Создание виртуального окружения и установка зависимостей:  
     * перейти в папку проекта  
     ```console
-        cd ./python_basic_diploma
+        cd ./TelegrammBotApiKinopoisk
     ``` 
     * создание виртуального окружения  
     ```console
@@ -39,7 +39,7 @@
 5. Запустить приложение:
     * перейти в папку проекта  
     ```console
-        cd ./python_basic_diploma
+        cd ./TelegrammBotApiKinopoisk
     ``` 
     * запуск приложения 
     ```console
