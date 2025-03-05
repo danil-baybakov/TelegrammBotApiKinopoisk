@@ -7,7 +7,7 @@
 
 1. Клонирование репозитория  
 ```console 
-  git clone https://gitlab.skillbox.ru/daniil_baibakov/python_basic_diploma.git
+  git clone https://github.com/danil-baybakov/TelegrammBotApiKinopoisk.git
 ```
 2. Создание виртуального окружения и установка зависимостей:  
     * перейти в папку проекта  
